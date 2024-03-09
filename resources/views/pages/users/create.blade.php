@@ -57,14 +57,8 @@
                             <i class="fas fa-user"></i>
                         </div>
                     </div>
-                    <input type="name" class="form-control @error('name') is-invalid @enderror" name="name"
-                        placeholder="nama" id="name">
+                    <input type="name" class="form-control" name="name" placeholder="nama" id="name">
                 </div>
-                @error('name')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
             </div>
             <div class="form-group">
                 <div class="input-group">
@@ -73,14 +67,9 @@
                             <i class="fas fa-envelope"></i>
                         </div>
                     </div>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-                        placeholder="email@mail.com" id="email">
+                    <input type="email" class="form-control" name="email" placeholder="email@mail.com"
+                        id="email">
                 </div>
-                @error('email')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
             </div>
             <div class="form-group">
                 <div class="input-group">
@@ -89,14 +78,8 @@
                             <i class="fas fa-lock"></i>
                         </div>
                     </div>
-                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password"
-                        placeholder="password" id="password">
+                    <input type="password" class="form-control" name="password" placeholder="password" id="password">
                 </div>
-                @error('password')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
             </div>
             <div class="form-group mt-2">
                 <div class="input-group">
@@ -105,14 +88,8 @@
                             <i class="fas fa-phone"></i>
                         </div>
                     </div>
-                    <input type="number" class="form-control @error('phone')  is-invalid  @enderror" name="phone"
-                        placeholder="no telp" id="phone">
+                    <input type="number" class="form-control" name="phone" placeholder="no telp" id="phone">
                 </div>
-                @error('phone')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
             </div>
             <div class="form-group mt-2">
                 <label class="form-label">Roles :</label>
@@ -134,13 +111,23 @@
             </div>
         </div>
         <div style="display: flex; justify-content: flex-end; bottom: 0;">
-            <button class="btn btn-primary" id="submitBtn">Submit</button>
+            <button class="btn btn-primary" id="submitBtn">Simpan</button>
         </div>
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         $(document).ready(function() {
+            $('#submitBtn').on('click', function() {
+                var originalText = $(this).text();
+                $(this).html(
+                    '<div class="d-flex justify-content-center align-items-center"><span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...</div>'
+                    );
+                setTimeout(function() {
+                    $('#submitBtn').html(originalText);
+                }, 2000);
+            });
+
             $('#submitFormUser').submit(function(e) {
                 e.preventDefault();
 
@@ -220,7 +207,7 @@
                         }).showToast();
                         setTimeout(function() {
                             window.location.href = '{{ route('managementUser') }}';
-                        }, 2000);
+                        }, 1000);
                     },
                     error: function(error) {
                         if (error.responseJSON.errors.name) {
