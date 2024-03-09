@@ -93,18 +93,17 @@
             </div>
             <div class="form-group mt-2">
                 <label class="form-label">Roles :</label>
-                <div class="selectgroup w-100">
+                <div class="selectgroup w-100 radio-btn">
                     <label class="selectgroup-item">
-                        <input type="radio" name="role_id" id="role_id" value="1" class="selectgroup-input"
-                            checked="">
+                        <input type="radio" name="role_id" value="1" class="selectgroup-input" checked="">
                         <span class="selectgroup-button">Super Admin</span>
                     </label>
                     <label class="selectgroup-item">
-                        <input type="radio" name="role_id" id="role_id" value="2" class="selectgroup-input">
+                        <input type="radio" name="role_id" value="2" class="selectgroup-input">
                         <span class="selectgroup-button">Doctor</span>
                     </label>
                     <label class="selectgroup-item">
-                        <input type="radio" name="role_id" id="role_id" value="3" class="selectgroup-input">
+                        <input type="radio" name="role_id" value="3" class="selectgroup-input">
                         <span class="selectgroup-button">Staff</span>
                     </label>
                 </div>
@@ -118,11 +117,16 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         $(document).ready(function() {
+            // $('.selectgroup-item input').on('change', function() {
+            //     var val = $(this).val();
+            //     alert(val)
+            // });
+
             $('#submitBtn').on('click', function() {
                 var originalText = $(this).text();
                 $(this).html(
                     '<div class="d-flex justify-content-center align-items-center"><span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...</div>'
-                    );
+                );
                 setTimeout(function() {
                     $('#submitBtn').html(originalText);
                 }, 2000);
@@ -135,7 +139,7 @@
                 var email = $('#email').val();
                 var password = $('#password').val();
                 var phone = $('#phone').val();
-                var role_id = $('#role_id').val();
+                var role_id = $('.selectgroup-item input:checked').val();
                 if (name === '') {
                     Toastify({
                         text: 'Nama harus diisi',
@@ -184,7 +188,6 @@
                     }).showToast();
                     return;
                 }
-
                 $.ajax({
                     url: '{{ route('storeUser') }}',
                     type: 'POST',

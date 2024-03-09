@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use DateTime;
-use Illuminate\Contracts\Support\ValidatedData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +20,7 @@ class UserController extends Controller
             })
             ->select('r.role_name', 'u.id', 'u.name', 'u.name', 'u.email', 'u.phone', 'u.created_at')
             ->orderBy('id', 'desc')
-            ->paginate(5);
+            ->paginate(10);
 
         foreach ($users as $u) {
             $timestamp = $u->created_at;
@@ -87,7 +86,15 @@ class UserController extends Controller
     public function editUser(Request $request)
     {
         $id = $request->id;
-        $userData = DB::table('m_users as u')->where('id', $id)->first();
-        return view('pages.users.edit');
+        $role = DB::table('m_roles')->get();
+        $userData = DB::table('m_users as u')
+            ->join('m_roles as r', 'u.role_id', '=', 'r.id')
+            ->select('r.role_name', 'u.id', 'u.name', 'u.role_id', 'u.name', 'u.email', 'u.phone', 'u.created_at')
+            ->where('u.id', $id)->first();
+        $view = [
+            'userData' => $userData,
+            'role' => $role
+        ];
+        return view('pages.users.edit', $view);
     }
 }

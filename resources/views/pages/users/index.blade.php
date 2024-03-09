@@ -12,11 +12,6 @@
         <section class="section">
             <div class="section-header">
                 <h1>Users</h1>
-                <div class="section-header-button">
-                    <a href="#" class="btn btn-primary" id="add-btn">
-                        <i class="fa fa-add"></i> Add New
-                    </a>
-                </div>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
                     <div class="breadcrumb-item"><a href="{{ route('managementUser') }}">Management Users</a></div>
@@ -34,17 +29,14 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="float-left">
-                                    <select class="form-control selectric">
-                                        <option>Action For Selected</option>
-                                        <option>Move to Draft</option>
-                                        <option>Move to Pending</option>
-                                        <option>Delete Pemanently</option>
-                                    </select>
+                                    <a href="#" class="btn btn-primary" id="add-btn">
+                                        <i class="fa fa-add"></i> Tambah
+                                    </a>
                                 </div>
                                 <div class="float-right">
                                     <form method="GET" action="{{ route('managementUser') }}">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Search" name="name">
+                                            <input type="text" class="form-control" placeholder="Cari..." name="name">
                                             <div class="input-group-append">
                                                 <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                                             </div>
@@ -82,13 +74,11 @@
                                                 <td>{{ $user->created_at }}</td>
                                                 <td>
                                                     <div class="d-flex justify-content-center">
-                                                        <a {{-- href='{{ route('user.edit', $user->id) }}' --}}
-                                                            class="btn btn-sm btn-info btn-icon btn-edit"
+                                                        <a class="btn btn-sm btn-info btn-icon btn-edit"
                                                             id-users="{{ $user->id }}">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-
-                                                        <form {{-- action="{{ route('user.destroy', $user->id) }}"  --}} method="POST" class="ml-2">
+                                                        <form method="POST" class="ml-2">
                                                             <input type="hidden" name="_method" value="DELETE" />
                                                             <input type="hidden" name="_token"
                                                                 value="{{ csrf_token() }}" />
