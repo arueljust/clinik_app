@@ -42,12 +42,25 @@
             margin-right: 8px;
             color: inherit;
         }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #imagePreview img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
     </style>
 
 </head>
 
 <body>
-    <form action="#" id="submitFormUser">
+    <form action="#" id="submitFormDoctor" enctype="multipart/form-data">
         @csrf
         <div class="card-body">
             <div class="form-group">
@@ -57,7 +70,7 @@
                             <i class="fa-solid fa-id-card"></i>
                         </div>
                     </div>
-                    <input type="name" class="form-control" name="name" placeholder="nama" id="name">
+                    <input type="text" class="form-control" name="doctor_name" placeholder="nama" id="doctor_name">
                 </div>
             </div>
             <div class="form-group">
@@ -67,18 +80,19 @@
                             <i class="fas fa-envelope"></i>
                         </div>
                     </div>
-                    <input type="email" class="form-control" name="email" placeholder="email@mail.com"
-                        id="email">
+                    <input type="email" class="form-control" name="doctor_email" placeholder="email@mail.com"
+                        id="doctor_email">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
-                            <i class="fas fa-lock"></i>
+                            <i class="fa-solid fa-suitcase-medical"></i>
                         </div>
                     </div>
-                    <input type="password" class="form-control" name="password" placeholder="password" id="password">
+                    <input type="text" class="form-control" name="doctor_specialist" placeholder="Dokter Spesialis"
+                        id="doctor_specialist">
                 </div>
             </div>
             <div class="form-group mt-2">
@@ -88,54 +102,73 @@
                             <i class="fas fa-phone"></i>
                         </div>
                     </div>
-                    <input type="number" class="form-control" name="phone" placeholder="no telp" id="phone">
+                    <input type="number" class="form-control" name="doctor_phone" placeholder="no telp"
+                        id="doctor_phone">
                 </div>
             </div>
             <div class="form-group mt-2">
-                <label class="form-label">Roles :</label>
-                <div class="selectgroup w-100 radio-btn">
-                    <label class="selectgroup-item">
-                        <input type="radio" name="role_id" value="1" class="selectgroup-input" checked="">
-                        <span class="selectgroup-button">Super Admin</span>
-                    </label>
-                    <label class="selectgroup-item">
-                        <input type="radio" name="role_id" value="2" class="selectgroup-input">
-                        <span class="selectgroup-button">Doctor</span>
-                    </label>
-                    <label class="selectgroup-item">
-                        <input type="radio" name="role_id" value="3" class="selectgroup-input">
-                        <span class="selectgroup-button">Staff</span>
-                    </label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" name="doctor_address" placeholder="Alamat"
+                        id="doctor_address">
                 </div>
             </div>
+            <div class="form-group mt-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="fa-solid fa-id-card-clip"></i>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" name="doctor_sip" placeholder="Surat izin praktek"
+                        id="doctor_sip">
+                </div>
+            </div>
+            <div class="form-group mt-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="fa-solid fa-image"></i>
+                        </div>
+                    </div>
+                    <input type="file" class="form-control" id="doctor_photo" name="doctor_photo" accept="image/*">
+                    <div id="imagePreview" class="mt-2"></div>
+                </div>
+            </div>
+
         </div>
         <div style="display: flex; justify-content: flex-end; bottom: 0;">
-            <button class="btn btn-primary" id="submitBtn">Simpan</button>
+            <button class="btn btn-primary" id="submitBtnDoctor">Simpan</button>
         </div>
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         $(document).ready(function() {
-            $('#submitBtn').on('click', function() {
+            $('#submitBtnDoctor').on('click', function() {
                 var originalText = $(this).text();
                 $(this).html(
                     '<div class="d-flex justify-content-center align-items-center"><span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...</div>'
                 );
                 setTimeout(function() {
-                    $('#submitBtn').html(originalText);
+                    $('#submitBtnDoctor').html(originalText);
                 }, 2000);
             });
 
-            $('#submitFormUser').submit(function(e) {
+            $('#submitFormDoctor').submit(function(e) {
                 e.preventDefault();
 
-                var name = $('#name').val();
-                var email = $('#email').val();
-                var password = $('#password').val();
-                var phone = $('#phone').val();
-                var role_id = $('.selectgroup-item input:checked').val();
-                if (name === '') {
+                var doctor_name = $('#doctor_name').val();
+                var doctor_email = $('#doctor_email').val();
+                var doctor_specialist = $('#doctor_specialist').val();
+                var doctor_phone = $('#doctor_phone').val();
+                var doctor_address = $('#doctor_address').val();
+                var doctor_sip = $('#doctor_sip').val();
+                if (doctor_name === '') {
                     Toastify({
                         text: 'Nama harus diisi',
                         duration: 2000,
@@ -147,7 +180,7 @@
                     }).showToast();
                     return;
                 }
-                if (email === '') {
+                if (doctor_email === '') {
                     Toastify({
                         text: 'email harus diisi',
                         duration: 2000,
@@ -159,9 +192,9 @@
                     }).showToast();
                     return;
                 }
-                if (password === '') {
+                if (doctor_specialist === '') {
                     Toastify({
-                        text: 'password harus diisi',
+                        text: 'spesialis dokter harus diisi',
                         duration: 2000,
                         gravity: 'top',
                         position: 'center',
@@ -171,7 +204,7 @@
                     }).showToast();
                     return;
                 }
-                if (phone === '') {
+                if (doctor_phone === '') {
                     Toastify({
                         text: 'no telp harus diisi',
                         duration: 2000,
@@ -183,6 +216,31 @@
                     }).showToast();
                     return;
                 }
+                if (doctor_address === '') {
+                    Toastify({
+                        text: 'alamat harus diisi',
+                        duration: 2000,
+                        gravity: 'top',
+                        position: 'center',
+                        backgroundColor: '#ffc107',
+                        stopOnFocus: true,
+                        className: 'toastify-with-icon',
+                    }).showToast();
+                    return;
+                }
+                if (doctor_sip === '') {
+                    Toastify({
+                        text: 'SIP harus diisi',
+                        duration: 2000,
+                        gravity: 'top',
+                        position: 'center',
+                        backgroundColor: '#ffc107',
+                        stopOnFocus: true,
+                        className: 'toastify-with-icon',
+                    }).showToast();
+                    return;
+                }
+
                 $.ajax({
                     url: '{{ route('storeUser') }}',
                     type: 'POST',
@@ -263,6 +321,23 @@
                     }
                 });
             });
+        });
+    </script>
+    <script>
+        document.getElementById('doctor_photo').addEventListener('change', function(event) {
+            var input = event.target;
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var preview = document.getElementById('imagePreview');
+                    preview.innerHTML = '<img src="' + e.target.result +
+                        '" alt="Preview">';
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
         });
     </script>
 

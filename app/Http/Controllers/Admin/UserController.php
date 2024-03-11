@@ -44,6 +44,9 @@ class UserController extends Controller
 
     public function storeUser(Request $req)
     {
+        $utcTime = now();
+        $localTime = Carbon::parse($utcTime)->setTimezone('Asia/Jakarta');
+        $formattedLocalTime = $localTime->format('Y-m-d H:i:s');
         $validator = Validator::make($req->all(), [
             'name' => 'required|max:15|min:5',
             'email' => 'required|email|unique:m_users,email',
@@ -77,15 +80,16 @@ class UserController extends Controller
             'email' => $req->email,
             'phone' => $req->phone,
             'password' => Hash::make($req->password),
-            'status' => '0'
+            'status' => '0',
+            'created_at' => $formattedLocalTime
         ];
 
         $save = DB::table('m_users')->insert($data);
     }
 
-    public function editUser(Request $request)
+    public function editUser(Request $req)
     {
-        $id = $request->id;
+        $id = $req->id;
         $role = DB::table('m_roles')->get();
         $userData = DB::table('m_users as u')
             ->join('m_roles as r', 'u.role_id', '=', 'r.id')
@@ -96,5 +100,52 @@ class UserController extends Controller
             'role' => $role
         ];
         return view('pages.users.edit', $view);
+    }
+
+    public function updateUser(Request $req)
+    {
+        $id = $req->id;
+        $name = $req->name;
+        $email = $req->email;
+        $phone = $req->phone;
+        $role = $req->role_id;
+        $updatePass = '';
+        $currentPass = DB::table('m_users')->where('id', $id)->first();
+        if ($req->password != null) {
+            $updatePass = Hash::make($req->password);
+        } else {
+            $updatePass = $currentPass->password;
+        }
+        $utcTime = now();
+        $localTime = Carbon::parse($utcTime)->setTimezone('Asia/Jakarta');
+        $formattedLocalTime = $localTime->format('Y-m-d H:i:s');
+        try {
+            $data = [
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'password' => $updatePass,
+                'role_id' => $role,
+                'updated_at' => $formattedLocalTime
+            ];
+            $update = DB::table('m_users')->where('id', $id)->update($data);
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
+
+    public function deleteUser(Request $req)
+    {
+        $id = $req->id;
+
+        $delete = DB::table('m_users')->where('id', $id)->delete();
+        if ($delete) {
+            return 'Data terhapus';
+        }
+    }
+
+    public function updateStatusUser()
+    {
+
     }
 }

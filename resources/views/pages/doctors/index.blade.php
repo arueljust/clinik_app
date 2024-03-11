@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Users')
+@section('title', 'Doctors')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -11,10 +11,10 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Users</h1>
+                <h1>Doctors</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('managementUser') }}">Management Users</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('managementDoctor') }}">Dokter</a></div>
                     <div class="breadcrumb-item">All Users</div>
                 </div>
             </div>
@@ -29,12 +29,12 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="float-left">
-                                    <a href="#" class="btn btn-primary" id="add-btn">
+                                    <a href="#" class="btn btn-primary" id="add-btn-doctor">
                                         <i class="fa fa-add"></i> Tambah
                                     </a>
                                 </div>
                                 <div class="float-right">
-                                    <form method="GET" action="{{ route('managementUser') }}">
+                                    <form method="GET" action="{{ route('managementDoctor') }}">
                                         <div class="input-group">
                                             <input type="text" class="form-control" placeholder="Cari..." name="name">
                                             <div class="input-group-append">
@@ -52,49 +52,57 @@
 
                                             <th>Nama</th>
                                             <th>Email</th>
-                                            <th>NO Telp</th>
-                                            <th>Role</th>
+                                            <th>No Telp</th>
+                                            <th>Alamat</th>
+                                            <th>SIP</th>
+                                            <th>Photo</th>
                                             <th>Registrasi</th>
                                             <th>Aksi</th>
                                         </tr>
-                                        @foreach ($users as $user)
+                                        @foreach ($doctors as $user)
                                             <tr>
 
-                                                <td>{{ $user->name }}
+                                                <td>
+                                                    {{ $user->doctor_name }}
                                                 </td>
                                                 <td>
-                                                    {{ $user->email }}
+                                                    {{ $user->doctor_email }}
                                                 </td>
                                                 <td>
-                                                    {{ $user->phone }}
+                                                    {{ $user->doctor_phone }}
                                                 </td>
                                                 <td>
-                                                    {{ $user->role_name }}
+                                                    {{ $user->doctor_address }}
                                                 </td>
-                                                <td>{{ $user->created_at }}</td>
-                                                @if (Auth::user()->id == $user->id)
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <span class="badge badge-success mr-2">Online</span>
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <a class="btn btn-sm btn-info btn-icon btn-edit"
-                                                                id-users="{{ $user->id }}">
-                                                                <i class="fas fa-edit"></i>
-                                                            </a>
-                                                            <form class="ml-2">
-                                                                <button
-                                                                    class="btn btn-sm btn-danger btn-icon confirm-delete"
-                                                                    value="{{ $user->id }}">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </td>
-                                                @endif
+                                                <td>
+                                                    {{ $user->doctor_sip }}
+                                                </td>
+                                                <td>
+                                                    @if ($user->doctor_photo == null)
+                                                        <img src="{{ asset('img-clinik/no_photo.png') }}" class="avatar"
+                                                            style="width: 40px; height: 40px; border-radius: 5px;">
+                                                    @else
+                                                        <img src="#" class="avatar-img-out"
+                                                            style="width: 40px; height: 40px; border-radius: 5px;">
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $user->created_at }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex justify-content-center">
+                                                        <a class="btn btn-sm btn-info btn-icon btn-edit"
+                                                            id-users="{{ $user->id }}">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <form class="ml-2">
+                                                            <button class="btn btn-sm btn-danger btn-icon confirm-delete"
+                                                                value="{{ $user->id }}">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         @endforeach
 
@@ -102,7 +110,7 @@
                                     </table>
                                 </div>
                                 <div class="float-right">
-                                    {{ $users->withQueryString()->links() }}
+                                    {{ $doctors->withQueryString()->links() }}
                                 </div>
                             </div>
                         </div>
@@ -122,10 +130,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
-            $('#add-btn').on('click', function() {
-                $('#modalTitle').text('Tambah User');
+            $('#add-btn-doctor').on('click', function() {
+                $('#modalTitle').text('Tambah Dokter');
                 $.ajax({
-                    url: '{{ route('addUser') }}',
+                    url: '{{ route('addDoctor') }}',
                     type: 'GET',
                     success: function(res) {
                         $('#myModal').modal('show');

@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'status',
     ];
 
     /**
@@ -43,4 +45,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function updateStatus($status)
+    {
+        $this->update(['status' => $status]);
+    }
 }

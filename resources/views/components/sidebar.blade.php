@@ -14,16 +14,22 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="dropdown {{ request()->is('admin/management-users') ? 'active' : '' }}">
+            <li
+                class="dropdown {{ request()->is(['admin/management-users', 'admin/management-doctors']) ? 'active' : '' }}">
                 <a href="#"
-                    class="nav-link has-dropdown {{ request()->is('admin/management-users') ? 'show' : '' }}"
+                    class="nav-link has-dropdown {{ request()->is(['admin/management-users', 'admin/management-doctors']) ? 'show' : '' }}"
                     data-toggle="dropdown"
-                    aria-expanded="{{ request()->is('admin/management-users') ? 'true' : 'false' }}">
+                    aria-expanded="{{ request()->is(['admin/management-users', 'admin/management-doctors']) ? 'true' : 'false' }}">
                     <i class="fas fa-folder"></i> <span>Master Data</span>
                 </a>
                 <ul class="dropdown-menu" style="">
                     <li class="{{ request()->is('admin/management-users') ? 'active' : '' }}"><a class="nav-link"
-                            href="{{ route('managementUser') }}"><i class="fas fa-users"></i> Manage-Users</a>
+                            href="{{ route('managementUser') }}"><i class="fas fa-users"></i> User</a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu" style="">
+                    <li class="{{ request()->is('admin/management-doctors') ? 'active' : '' }}"><a class="nav-link"
+                            href="{{ route('managementDoctor') }}"><i class="fa-solid fa-suitcase-medical"></i> Dokter</a>
                     </li>
                 </ul>
             </li>
