@@ -60,7 +60,7 @@
 </head>
 
 <body>
-    <form action="#" id="submitFormDoctor" enctype="multipart/form-data">
+    <form action="{{ route('storeDoctor') }}" method="POST" id="submitFormDoctor" enctype="multipart/form-data">
         @csrf
         <div class="card-body">
             <div class="form-group">
@@ -161,115 +161,37 @@
 
             $('#submitFormDoctor').submit(function(e) {
                 e.preventDefault();
-
-                var doctor_name = $('#doctor_name').val();
-                var doctor_email = $('#doctor_email').val();
-                var doctor_specialist = $('#doctor_specialist').val();
-                var doctor_phone = $('#doctor_phone').val();
-                var doctor_address = $('#doctor_address').val();
-                var doctor_sip = $('#doctor_sip').val();
-                if (doctor_name === '') {
-                    Toastify({
-                        text: 'Nama harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
-                if (doctor_email === '') {
-                    Toastify({
-                        text: 'email harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
-                if (doctor_specialist === '') {
-                    Toastify({
-                        text: 'spesialis dokter harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
-                if (doctor_phone === '') {
-                    Toastify({
-                        text: 'no telp harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
-                if (doctor_address === '') {
-                    Toastify({
-                        text: 'alamat harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
-                if (doctor_sip === '') {
-                    Toastify({
-                        text: 'SIP harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
-
+                var formData = new FormData(this);
                 $.ajax({
-                    url: '{{ route('storeUser') }}',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        name: name,
-                        email: email,
-                        password: password,
-                        phone: phone,
-                        role_id: role_id
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     success: function(res) {
-                        Toastify({
-                            text: 'Berhasil simpan data',
-                            gravity: 'top',
-                            position: 'right',
-                            backgroundColor: '#4CAF50',
-                            stopOnFocus: true,
-                            className: 'toastify-with-icon-success',
-                        }).showToast();
-                        setTimeout(function() {
-                            window.location.href = '{{ route('managementUser') }}';
-                        }, 1000);
+                        if (res) {
+                            Toastify({
+                                text: res,
+                                gravity: 'top',
+                                position: 'right',
+                                backgroundColor: '#4CAF50',
+                                stopOnFocus: true,
+                                className: 'toastify-with-icon-success',
+                            }).showToast();
+                            setTimeout(function() {
+                                window.location.href =
+                                    '{{ route('managementDoctor') }}';
+                            }, 1000);
+                        }
                     },
                     error: function(error) {
-                        if (error.responseJSON.errors.name) {
-                            console.log('masuk error')
+                        if (error.responseJSON.errors.doctor_name) {
+                            console.log('masuk error' + error.responseJSON.errors.doctor_name)
                             Toastify({
-                                text: error.responseJSON.errors.name[0],
+                                text: error.responseJSON.errors.doctor_name[0],
                                 duration: 2000,
                                 gravity: 'top',
                                 position: 'center',
@@ -279,10 +201,11 @@
                             }).showToast();
                             return false;
                         }
-                        if (error.responseJSON.errors.email) {
+
+                        if (error.responseJSON.errors.doctor_email) {
                             console.log('masuk error')
                             Toastify({
-                                text: error.responseJSON.errors.email[0],
+                                text: error.responseJSON.errors.doctor_email[0],
                                 duration: 2000,
                                 gravity: 'top',
                                 position: 'center',
@@ -292,10 +215,11 @@
                             }).showToast();
                             return false;
                         }
-                        if (error.responseJSON.errors.password) {
+
+                        if (error.responseJSON.errors.doctor_specialist) {
                             console.log('masuk error')
                             Toastify({
-                                text: error.responseJSON.errors.password[0],
+                                text: error.responseJSON.errors.doctor_specialist[0],
                                 duration: 2000,
                                 gravity: 'top',
                                 position: 'center',
@@ -305,10 +229,39 @@
                             }).showToast();
                             return false;
                         }
-                        if (error.responseJSON.errors.phone) {
+
+                        if (error.responseJSON.errors.doctor_phone) {
                             console.log('masuk error')
                             Toastify({
-                                text: error.responseJSON.errors.phone[0],
+                                text: error.responseJSON.errors.doctor_phone[0],
+                                duration: 2000,
+                                gravity: 'top',
+                                position: 'center',
+                                backgroundColor: '#ffc107',
+                                stopOnFocus: true,
+                                className: 'toastify-with-icon',
+                            }).showToast();
+                            return false;
+                        }
+
+                        if (error.responseJSON.errors.doctor_address) {
+                            console.log('masuk error')
+                            Toastify({
+                                text: error.responseJSON.errors.doctor_address[0],
+                                duration: 2000,
+                                gravity: 'top',
+                                position: 'center',
+                                backgroundColor: '#ffc107',
+                                stopOnFocus: true,
+                                className: 'toastify-with-icon',
+                            }).showToast();
+                            return false;
+                        }
+
+                        if (error.responseJSON.errors.doctor_sip) {
+                            console.log('masuk error')
+                            Toastify({
+                                text: error.responseJSON.errors.doctor_sip[0],
                                 duration: 2000,
                                 gravity: 'top',
                                 position: 'center',

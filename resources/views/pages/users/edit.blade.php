@@ -134,42 +134,6 @@
                 var password = $('#password').val();
                 var phone = $('#phone').val();
                 var role_id = $('.selectgroup-item input:checked').val();
-                if (name === '') {
-                    Toastify({
-                        text: 'Nama harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
-                if (email === '') {
-                    Toastify({
-                        text: 'email harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
-                if (phone === '') {
-                    Toastify({
-                        text: 'no telp harus diisi',
-                        duration: 2000,
-                        gravity: 'top',
-                        position: 'center',
-                        backgroundColor: '#ffc107',
-                        stopOnFocus: true,
-                        className: 'toastify-with-icon',
-                    }).showToast();
-                    return;
-                }
 
                 $.ajax({
                     url: '{{ route('updateUser') }}',

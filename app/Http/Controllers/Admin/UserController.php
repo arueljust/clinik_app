@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Validators\UserValidator;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -47,29 +47,7 @@ class UserController extends Controller
         $utcTime = now();
         $localTime = Carbon::parse($utcTime)->setTimezone('Asia/Jakarta');
         $formattedLocalTime = $localTime->format('Y-m-d H:i:s');
-        $validator = Validator::make($req->all(), [
-            'name' => 'required|max:15|min:5',
-            'email' => 'required|email|unique:m_users,email',
-            'password' => [
-                'required',
-                'min:8',
-                'regex:/^(?=.*[0-9])(?=.*[a-zA-Z])/',
-            ],
-            'phone' => 'required|numeric|min:1000000000|unique:m_users,phone'
-        ], [
-            'name.required' => 'Nama harus diisi',
-            'name.max' => 'Nama maximal 15 karakter',
-            'name.min' => 'Nama minimal 5 karakter',
-            'email.required' => 'Email harus diisi',
-            'email.email' => 'Email harus berupa alamat email yang valid',
-            'email.unique' => 'Email sudah digunakan oleh pengguna lain',
-            'password.required' => 'Password harus diisi',
-            'password.min' => 'Password minimal harus terdiri dari 8 karater',
-            'password.regex' => 'Password harus terdiri dari angka dan huruf',
-            'phone.numeric' => 'No telp harus berisi nomor',
-            'phone.min' => 'No telp minimal 10 karakter',
-            'phone.unique' => 'No telp sudah ada'
-        ]);
+        $validator = UserValidator::validateUser($req->all());
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -146,6 +124,5 @@ class UserController extends Controller
 
     public function updateStatusUser()
     {
-
     }
 }

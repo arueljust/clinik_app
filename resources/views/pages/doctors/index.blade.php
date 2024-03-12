@@ -59,45 +59,47 @@
                                             <th>Registrasi</th>
                                             <th>Aksi</th>
                                         </tr>
-                                        @foreach ($doctors as $user)
+                                        @foreach ($doctors as $doctor)
                                             <tr>
 
                                                 <td>
-                                                    {{ $user->doctor_name }}
+                                                    {{ $doctor->doctor_name }}
                                                 </td>
                                                 <td>
-                                                    {{ $user->doctor_email }}
+                                                    {{ $doctor->doctor_email }}
                                                 </td>
                                                 <td>
-                                                    {{ $user->doctor_phone }}
+                                                    {{ $doctor->doctor_phone }}
                                                 </td>
                                                 <td>
-                                                    {{ $user->doctor_address }}
+                                                    {{ $doctor->doctor_address }}
                                                 </td>
                                                 <td>
-                                                    {{ $user->doctor_sip }}
+                                                    {{ $doctor->doctor_sip }}
                                                 </td>
                                                 <td>
-                                                    @if ($user->doctor_photo == null)
+                                                    @if ($doctor->doctor_photo == null)
                                                         <img src="{{ asset('img-clinik/no_photo.png') }}" class="avatar"
                                                             style="width: 40px; height: 40px; border-radius: 5px;">
                                                     @else
-                                                        <img src="#" class="avatar-img-out"
+                                                        <img src="{{ asset('storage/images/doctor/' . $doctor->doctor_photo) }}"
+                                                            class="avatar-img-out" alt="Gambar tidak ditemukan"
                                                             style="width: 40px; height: 40px; border-radius: 5px;">
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{ $user->created_at }}
+                                                    {{ $doctor->created_at }}
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-center">
-                                                        <a class="btn btn-sm btn-info btn-icon btn-edit"
-                                                            id-users="{{ $user->id }}">
+                                                        <a class="btn btn-sm btn-info btn-icon btn-edit-doctor"
+                                                            id-doctor="{{ $doctor->id }}">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                         <form class="ml-2">
-                                                            <button class="btn btn-sm btn-danger btn-icon confirm-delete"
-                                                                value="{{ $user->id }}">
+                                                            <button
+                                                                class="btn btn-sm btn-danger btn-icon confirm-delete-doctor"
+                                                                value="{{ $doctor->id }}">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -144,11 +146,12 @@
                     }
                 });
             });
-            $('.btn-edit').on('click', function() {
-                var userId = $(this).attr('id-users');
-                $('#modalTitle').text('Edit User');
+            $('.btn-edit-doctor').on('click', function() {
+                var doctorId = $(this).attr('id-doctor');
+                $('#modalTitle').text('Edit Doctor');
                 $.ajax({
-                    url: `{{ route('editUser', ['id' => ':userId']) }}`.replace(':userId', userId),
+                    url: `{{ route('editDoctor', ['id' => ':doctorId']) }}`.replace(':doctorId',
+                        doctorId),
                     type: 'GET',
                     success: function(res) {
                         $('#myModal').modal('show');
@@ -160,7 +163,7 @@
                 });
             });
 
-            $('.confirm-delete').on('click', function() {
+            $('.confirm-delete-doctor').on('click', function() {
                 var id = $(this).val();
                 Swal.fire({
                     title: 'Yakin hapus data ?',
@@ -174,7 +177,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: '{{ route('deleteUser') }}',
+                            url: '{{ route('deleteDoctor') }}',
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 id: id
@@ -189,7 +192,7 @@
 
                                 setTimeout(() => {
                                     window.location.href =
-                                        '{{ route('managementUser') }}';
+                                        '{{ route('managementDoctor') }}';
                                 }, 1000);
                             },
                             error: function(err) {
