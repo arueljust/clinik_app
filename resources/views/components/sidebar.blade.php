@@ -9,7 +9,7 @@
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
-            <li class="nav-item dropdown">
+            <li class="dropdown {{ request()->is(['admin/dashboard']) ? 'active' : '' }}">
                 <a href="{{ url('admin/dashboard') }}" class="nav-link"><i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
@@ -29,9 +29,16 @@
                 </ul>
                 <ul class="dropdown-menu" style="">
                     <li class="{{ request()->is('admin/management-doctors') ? 'active' : '' }}"><a class="nav-link"
-                            href="{{ route('managementDoctor') }}"><i class="fa-solid fa-suitcase-medical"></i> Dokter</a>
+                            href="{{ route('managementDoctor') }}"><i class="fa-solid fa-suitcase-medical"></i>
+                            Dokter</a>
                     </li>
                 </ul>
+            </li>
+            <li class="dropdown {{ request()->is(['admin/management-doctors-schedule']) ? 'active' : '' }}">
+                <a href="{{ route('managementDoctorSchedule') }}" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Doctor Schedule</span>
+                </a>
             </li>
         </ul>
     </aside>

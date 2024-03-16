@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('doctor_photo')->nullable();
             $table->string('doctor_address');
             $table->string('doctor_sip');
+            $table->string('doctor_nik')->nullable();
+            $table->string('id_ihs')->nullable();
             $table->timestamps();
         });
     }

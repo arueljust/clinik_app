@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\waNotif;
+use App\Services\whatsAppNotification;
 use App\Validators\UserValidator;
 use Carbon\Carbon;
 use DateTime;
@@ -42,7 +44,7 @@ class UserController extends Controller
         return view('pages.users.create');
     }
 
-    public function storeUser(Request $req)
+    public function storeUser(Request $req, waNotif $wanotif)
     {
         $utcTime = now();
         $localTime = Carbon::parse($utcTime)->setTimezone('Asia/Jakarta');
@@ -63,6 +65,12 @@ class UserController extends Controller
         ];
 
         $save = DB::table('m_users')->insert($data);
+        if ($save) {
+            $phoneNumber = '0881027666378';
+            $message = 'Masuk g ya ?';
+            $wanotif->sendMessage($phoneNumber, $message);
+            // $whatsAppNotification->sendWhatsAppMessage($phoneNumber, $message);
+        }
     }
 
     public function editUser(Request $req)
