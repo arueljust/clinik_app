@@ -29,7 +29,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="float-left">
-                                    <a href="#" class="btn btn-primary" id="add-btn-doctor">
+                                    <a href="#" class="btn btn-primary" id="add-btn-doctor-schedule">
                                         <i class="fa fa-add"></i> Tambah
                                     </a>
                                 </div>
@@ -121,10 +121,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
-            $('#add-btn-doctor').on('click', function() {
-                $('#modalTitle').text('Tambah Dokter');
+            $('#add-btn-doctor-schedule').on('click', function() {
+                $('#modalTitle').text('Tambah Schedule Dokter');
                 $.ajax({
-                    url: '{{ route('addDoctor') }}',
+                    url: '{{ route('addDoctorSchedule') }}',
                     type: 'GET',
                     success: function(res) {
                         $('#myModal').modal('show');

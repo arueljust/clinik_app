@@ -39,8 +39,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/delete-doctor', [DoctorController::class, 'deleteDoctor'])->name('deleteDoctor');
     // doctor_schedule
     Route::get('/management-doctors-schedule', [DoctorScheduleController::class, 'managementDoctorSchedule'])->name('managementDoctorSchedule');
-    // Route::get('/add-doctor', [DoctorController::class, 'createDoctor'])->name('addDoctor');
-    // Route::post('/store-doctor', [DoctorController::class, 'storeDoctor'])->name('storeDoctor');
+    Route::get('/add-doctor-schedule', [DoctorScheduleController::class, 'createDoctorSchedule'])->name('addDoctorSchedule');
+    Route::post('/store-doctor-schedule', [DoctorScheduleController::class, 'storeDoctorSchedule'])->name('storeDoctorSchedule');
     // Route::get('/edit-doctor/{id}', [DoctorController::class, 'editDoctor'])->name('editDoctor');
     // Route::post('/update-doctor', [DoctorController::class, 'updateDoctor'])->name('updateDoctor');
     // Route::post('/delete-doctor', [DoctorController::class, 'deleteDoctor'])->name('deleteDoctor');

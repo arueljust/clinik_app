@@ -34,4 +34,37 @@ class DoctorScheduleController extends Controller
         ];
         return view('pages.doctors_schedule.index', $view);
     }
+
+    public function createDoctorSchedule()
+    {
+        $doctor = DB::table('m_doctors')->get();
+
+        $view = [
+            'doctor' => $doctor
+        ];
+        return view('pages.doctors_schedule.create', $view);
+    }
+
+    public function storeDoctorSchedule(Request $req)
+    {
+        $doctorId = $req->doctor_id;
+        $day = $req->input('day');
+        $time = $req->input('additional_input');
+        $status = $req->status;
+        $note = $req->note;
+
+        $data = [
+            'doctor_id' => $doctorId,
+            'day' => json_encode($day),
+            'time' => json_encode($time),
+            'status' => $status,
+            'note' => $note,
+            'created_at' => now()
+        ];
+        $save = DB::table('doctor_schedules')->insert($data);
+        if ($save) {
+            return response()->json(['message' => 'ok']);
+        }
+        return response()->json(['message' => 'failed'], 500);
+    }
 }
