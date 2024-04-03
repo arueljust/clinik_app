@@ -16,7 +16,7 @@ class UserController extends Controller
 {
     public function managementUser(Request $request)
     {
-        $users = DB::table('m_users as u')->join('m_roles as r', 'u.role_id', '=', 'r.id')
+        $user = DB::table('m_users as u')->join('m_roles as r', 'u.role_id', '=', 'r.id')
             ->when($request->input('name'), function ($query, $name) {
                 return $query->where('name', 'like', '%' . $name . '%');
             })
@@ -24,7 +24,7 @@ class UserController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-        foreach ($users as $u) {
+        foreach ($user as $u) {
             $timestamp = $u->created_at;
             $dateTime = new DateTime($timestamp);
             $formattedDate = $dateTime->format('l, d F Y');
@@ -34,7 +34,7 @@ class UserController extends Controller
         }
 
         $view = [
-            'users' => $users
+            'user' => $user
         ];
         return view('pages.users.index', $view);
     }

@@ -55,126 +55,58 @@
             height: auto;
             border-radius: 10px;
         }
-
-        .image-doctor img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
-
-        .image-doctor {
-            max-width: 100%;
-            max-height: 400px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
     </style>
 
 </head>
 
 <body>
-    <form action="{{ route('updateDoctor') }}" method="POST" id="submitFormDoctor" enctype="multipart/form-data">
+    <form action="{{ route('storeDoctorSchedule') }}" method="POST" id="submitFormDoctorSchedule">
         @csrf
         <div class="card-body">
             <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fa-solid fa-id-card"></i>
-                        </div>
-                    </div>
-                    <input type="text" class="form-control" name="doctor_name" placeholder="nama" id="doctor_name"
-                        value="{{ $doctorData->doctor_name }}">
-                    <input type="hidden" name="id" id="doctor_id" value="{{ $doctorData->id }}">
-                </div>
+                <label>Pilih Dokter : </label>
+                <select class="form-control" name="doctor_id" tabindex="-1" aria-hidden="true">
+                    @foreach ($doctorData as $d)
+                        <option value="{{ $d->id }}"
+                            {{ $doctorSchedule->doctor_id == $d->id ? 'selected' : '' }}>
+                            {{ $d->doctor_name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                    </div>
-                    <input type="email" class="form-control" name="doctor_email" placeholder="email@mail.com"
-                        id="doctor_email" value="{{ $doctorData->doctor_email }}">
-                </div>
+                <label>Pilih Hari Partek :</label>
+                <select class="multiple-day select2" name="day[]" multiple="multiple">
+                    @foreach ($decodeDay as $d)
+                        <option value="{{ $d }}" selected>{{ $d }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fa-solid fa-suitcase-medical"></i>
-                        </div>
-                    </div>
-                    <input type="text" class="form-control" name="doctor_specialist" placeholder="Dokter Spesialis"
-                        id="doctor_specialist" value="{{ $doctorData->doctor_specialist }}">
+            <div class="form-group mt-2">
+                <label class="form-label">Status :</label>
+                <div class="selectgroup w-100 radio-btn">
+                    <label class="selectgroup-item">
+                        <input type="radio" name="status" value="Aktif" class="selectgroup-input"
+                            {{ $doctorSchedule->status == 'Aktif' ? 'checked' : '' }}>
+                        <span class="selectgroup-button">Aktif</span>
+                    </label>
+                    <label class="selectgroup-item">
+                        <input type="radio" name="status" value="Tidak aktif" class="selectgroup-input"
+                            {{ $doctorSchedule->status == 'Tidak aktif' ? 'checked' : '' }}>
+                        <span class="selectgroup-button">Tidak Aktif</span>
+                    </label>
                 </div>
             </div>
             <div class="form-group mt-2">
+                <label for="note">Informasi : </label>
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                    </div>
-                    <input type="number" class="form-control" name="doctor_phone" placeholder="no telp"
-                        id="doctor_phone" value="{{ $doctorData->doctor_phone }}">
+                    <textarea cols="60" rows="5" style="border: none; border-radius: 5px" name="note">{{ $doctorSchedule->note }}</textarea>
                 </div>
             </div>
-            <div class="form-group mt-2">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fa-solid fa-location-dot"></i>
-                        </div>
-                    </div>
-                    <input type="text" class="form-control" name="doctor_address" placeholder="Alamat"
-                        id="doctor_address" value="{{ $doctorData->doctor_address }}">
-                </div>
-            </div>
-            <div class="form-group mt-2">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fa-solid fa-id-card-clip"></i>
-                        </div>
-                    </div>
-                    <input type="text" class="form-control" name="doctor_sip" placeholder="Surat izin praktek"
-                        id="doctor_sip" value="{{ $doctorData->doctor_sip }}">
-                </div>
-            </div>
-            <div class="form-group mt-2">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fa-solid fa-image"></i>
-                        </div>
-                    </div>
-                    @if ($doctorData->doctor_photo != null)
-                        <input type="file" class="form-control" id="doctor_photo" name="doctor_photo"
-                            accept="image/*">
-                        <div id="imagePreview" class="mt-2">
-                            <div class="mt-2 image-doctor">
-                                @if ($doctorData->doctor_photo != null)
-                                    <img src="{{ asset('storage/images/doctor/' . $doctorData->doctor_photo) }}"
-                                        alt="Gambar Dokter">
-                                @endif
-                            </div>
-                        </div>
-                    @else
-                        <input type="file" class="form-control" id="doctor_photo" name="doctor_photo"
-                            accept="image/*">
-                        <div id="imagePreview" class="mt-2"></div>
-                    @endif
-                </div>
-            </div>
-
         </div>
         <div style="display: flex; justify-content: flex-end; bottom: 0;">
             <button class="btn btn-primary" id="submitBtnDoctor">Simpan</button>
         </div>
     </form>
-
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         $(document).ready(function() {
@@ -187,132 +119,119 @@
                     $('#submitBtnDoctor').html(originalText);
                 }, 2000);
             });
-
-            $('#submitFormDoctor').submit(function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    success: function(res) {
-                        if (res) {
-                            Toastify({
-                                text: res,
-                                gravity: 'top',
-                                position: 'right',
-                                backgroundColor: '#4CAF50',
-                                stopOnFocus: true,
-                                className: 'toastify-with-icon-success',
-                            }).showToast();
-                            setTimeout(function() {
-                                window.location.href =
-                                    '{{ route('managementDoctor') }}';
-                            }, 1000);
-                        }
-                    },
-                    error: function(error) {
-                        if (error.responseJSON.errors.doctor_name) {
-                            console.log('masuk error' + error.responseJSON.errors.doctor_name)
-                            Toastify({
-                                text: error.responseJSON.errors.doctor_name[0],
-                                duration: 2000,
-                                gravity: 'top',
-                                position: 'center',
-                                backgroundColor: '#ffc107',
-                                stopOnFocus: true,
-                                className: 'toastify-with-icon',
-                            }).showToast();
-                            return false;
-                        }
-
-                        if (error.responseJSON.errors.doctor_email) {
-                            console.log('masuk error')
-                            Toastify({
-                                text: error.responseJSON.errors.doctor_email[0],
-                                duration: 2000,
-                                gravity: 'top',
-                                position: 'center',
-                                backgroundColor: '#ffc107',
-                                stopOnFocus: true,
-                                className: 'toastify-with-icon',
-                            }).showToast();
-                            return false;
-                        }
-
-                        if (error.responseJSON.errors.doctor_specialist) {
-                            console.log('masuk error')
-                            Toastify({
-                                text: error.responseJSON.errors.doctor_specialist[0],
-                                duration: 2000,
-                                gravity: 'top',
-                                position: 'center',
-                                backgroundColor: '#ffc107',
-                                stopOnFocus: true,
-                                className: 'toastify-with-icon',
-                            }).showToast();
-                            return false;
-                        }
-
-                        if (error.responseJSON.errors.doctor_phone) {
-                            console.log('masuk error')
-                            Toastify({
-                                text: error.responseJSON.errors.doctor_phone[0],
-                                duration: 2000,
-                                gravity: 'top',
-                                position: 'center',
-                                backgroundColor: '#ffc107',
-                                stopOnFocus: true,
-                                className: 'toastify-with-icon',
-                            }).showToast();
-                            return false;
-                        }
-
-                        if (error.responseJSON.errors.doctor_address) {
-                            console.log('masuk error')
-                            Toastify({
-                                text: error.responseJSON.errors.doctor_address[0],
-                                duration: 2000,
-                                gravity: 'top',
-                                position: 'center',
-                                backgroundColor: '#ffc107',
-                                stopOnFocus: true,
-                                className: 'toastify-with-icon',
-                            }).showToast();
-                            return false;
-                        }
-
-                        if (error.responseJSON.errors.doctor_sip) {
-                            console.log('masuk error')
-                            Toastify({
-                                text: error.responseJSON.errors.doctor_sip[0],
-                                duration: 2000,
-                                gravity: 'top',
-                                position: 'center',
-                                backgroundColor: '#ffc107',
-                                stopOnFocus: true,
-                                className: 'toastify-with-icon',
-                            }).showToast();
-                            return false;
-                        }
-                    }
-                });
-            });
         });
     </script>
     <script>
+        document.getElementById('doctor_photo').addEventListener('change', function(event) {
+            var input = event.target;
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var preview = document.getElementById('imagePreview');
+                    preview.innerHTML = '<img src="' + e.target.result +
+                        '" alt="Preview">';
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+    </script>
+    {{-- logic select 2 --}}
+    <script>
         $(document).ready(function() {
-            $('#doctor_photo').change(function() {
-                $('#imagePreview').empty();
-                var file = this.files[0];
-                if (file) {
-                    var imageURL = URL.createObjectURL(file);
-                    $('#imagePreview').html('<img src="' + imageURL + '" alt="Gambar Dokter">');
+            $('.select2').select2();
+        });
+
+        // $(document).ready(function() {
+        //     var decodeTime = {!! json_encode($doctorSchedule->time) !!};
+        //     decodeTime.forEach((values) => {
+        //         console.log(values)
+        //     })
+        //     $('.select2').on('change', function() {
+        //         var selectedData = $(this).val();
+        //         var $parentDiv = $(this).closest('div.form-group');
+        //         $parentDiv.find('.additional-input').remove();
+        //         $parentDiv.find('.additional-label').remove();
+
+        //         if (selectedData && selectedData.length > 0) {
+        //             selectedData.forEach((value) => {
+        //                 var newInput = $('<input>').attr({
+        //                     type: 'text',
+        //                     class: 'form-control additional-input',
+        //                     name: 'additional_input[]',
+        //                     value: value,
+        //                 });
+        //                 var newLabel = $('<label>').attr({
+        //                     for: 'additional_input[]',
+        //                     class: 'mt-2 additional-label',
+        //                 }).text(value + ' :');
+        //                 $parentDiv.append(newLabel).append(newInput);
+        //             });
+        //         }
+        //     });
+        // });
+
+
+
+        $('.select2').on('change', function() {
+            var decodeTime = {!! json_encode($doctorSchedule->time) !!};
+            var selectedValues = $(this).val();
+            var $parentDiv = $(this).closest('div.form-group');
+            $parentDiv.find('.additional-input').remove();
+            $parentDiv.find('.additional-label').remove();
+
+            if (selectedValues && selectedValues.length > 0) {
+                selectedValues.forEach(function(value) {
+                    var newInput = $('<input>').attr({
+                        type: 'text',
+                        class: 'form-control additional-input',
+                        name: 'additional_input[]',
+                        placeholder: 'Jam praktek Hari ' + value
+                    });
+                    var newLabel = $('<label>').attr({
+                        for: 'additional_input[]',
+                        class: 'mt-2 additional-label',
+                    }).text(value + ' :');
+                    $parentDiv.append(newLabel).append(newInput);
+                });
+            }
+
+            // Persiapkan data untuk dikirim dengan AJAX
+            var formData = new FormData();
+            formData.append('selected_values', selectedValues.join(
+                ',')); // Gabungkan nilai-nilai yang dipilih menjadi string
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    console.log(res)
+                    if (res.message === 'ok') {
+                        Toastify({
+                            text: res,
+                            gravity: 'top',
+                            position: 'right',
+                            backgroundColor: '#4CAF50',
+                            stopOnFocus: true,
+                            className: 'toastify-with-icon-success',
+                        }).showToast();
+                        setTimeout(function() {
+                            window.location.href =
+                                '{{ route('managementDoctorSchedule') }}';
+                        }, 1000);
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
                 }
             });
         });

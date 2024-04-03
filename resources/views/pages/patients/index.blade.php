@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Users')
+@section('title', 'Patients')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -11,11 +11,11 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Users</h1>
+                <h1>Patient</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('managementUser') }}">Management Users</a></div>
-                    <div class="breadcrumb-item">All Users</div>
+                    <div class="breadcrumb-item"><a href="{{ route('managementPatient') }}">Management Patient</a></div>
+                    <div class="breadcrumb-item">All Patients</div>
                 </div>
             </div>
             <div class="section-body">
@@ -34,7 +34,7 @@
                                     </a>
                                 </div>
                                 <div class="float-right">
-                                    <form method="GET" action="{{ route('managementUser') }}">
+                                    <form method="GET" action="{{ route('managementPatient') }}">
                                         <div class="input-group">
                                             <input type="text" class="form-control" placeholder="Cari..." name="name">
                                             <div class="input-group-append">
@@ -53,11 +53,10 @@
                                             <th>Nama</th>
                                             <th>Email</th>
                                             <th>NO Telp</th>
-                                            <th>Role</th>
                                             <th>Registrasi</th>
                                             <th>Aksi</th>
                                         </tr>
-                                        @foreach ($user as $u)
+                                        @foreach ($patient as $u)
                                             <tr>
 
                                                 <td>{{ $u->name }}
@@ -67,9 +66,6 @@
                                                 </td>
                                                 <td>
                                                     {{ $u->phone }}
-                                                </td>
-                                                <td>
-                                                    {{ $u->role_name }}
                                                 </td>
                                                 <td>{{ $u->created_at }}</td>
                                                 @if (Auth::user()->id == $u->id)
@@ -100,7 +96,7 @@
                                     </table>
                                 </div>
                                 <div class="float-right">
-                                    {{ $user->withQueryString()->links() }}
+                                    {{ $patient->withQueryString()->links() }}
                                 </div>
                             </div>
                         </div>

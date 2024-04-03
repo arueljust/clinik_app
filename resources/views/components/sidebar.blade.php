@@ -15,16 +15,21 @@
                 </a>
             </li>
             <li
-                class="dropdown {{ request()->is(['admin/management-users', 'admin/management-doctors']) ? 'active' : '' }}">
+                class="dropdown {{ request()->is(['admin/management-users', 'admin/management-doctors','admin/management-patients']) ? 'active' : '' }}">
                 <a href="#"
-                    class="nav-link has-dropdown {{ request()->is(['admin/management-users', 'admin/management-doctors']) ? 'show' : '' }}"
+                    class="nav-link has-dropdown {{ request()->is(['admin/management-users', 'admin/management-doctors','admin/management-patients']) ? 'show' : '' }}"
                     data-toggle="dropdown"
-                    aria-expanded="{{ request()->is(['admin/management-users', 'admin/management-doctors']) ? 'true' : 'false' }}">
+                    aria-expanded="{{ request()->is(['admin/management-users', 'admin/management-doctors','admin/management-patients']) ? 'true' : 'false' }}">
                     <i class="fas fa-folder"></i> <span>Master Data</span>
                 </a>
                 <ul class="dropdown-menu" style="">
                     <li class="{{ request()->is('admin/management-users') ? 'active' : '' }}"><a class="nav-link"
                             href="{{ route('managementUser') }}"><i class="fas fa-users"></i> User</a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu" style="">
+                    <li class="{{ request()->is('admin/management-patients') ? 'active' : '' }}"><a class="nav-link"
+                            href="{{ route('managementPatient') }}"><i class="fa-solid fa-clipboard-list"></i> Patient</a>
                     </li>
                 </ul>
                 <ul class="dropdown-menu" style="">

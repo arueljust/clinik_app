@@ -48,8 +48,7 @@
 
                                 <div class="table-responsive">
                                     <table class="table-striped table">
-                                        <tr>
-
+                                        <tr class="text-center">
                                             <th>Nama</th>
                                             <th>Hari</th>
                                             <th>Waktu</th>
@@ -58,17 +57,28 @@
                                             <th>Registrasi</th>
                                             <th>Aksi</th>
                                         </tr>
-                                        @foreach ($doctorsSchedule as $doctor)
+                                        {{-- @forelse ($doctorsSchedule as $doctor)
                                             <tr>
-
                                                 <td>
                                                     {{ $doctor->doctor_name }}
                                                 </td>
                                                 <td>
-                                                    {{ $doctor->day }}
+                                                    @if ($doctor->day == null)
+                                                        <h6>Tidak ada Data !</h6>
+                                                    @else
+                                                        @foreach ($doctor->day as $item)
+                                                            * {{ $item }} <br>
+                                                        @endforeach
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    {{ $doctor->time }}
+                                                    @if ($doctor->day == null)
+                                                        <h6>Tidak ada Data !</h6>
+                                                    @else
+                                                        @foreach ($doctor->time as $item)
+                                                            * ({{ $item }})<br>
+                                                        @endforeach
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{ $doctor->status }}
@@ -81,13 +91,61 @@
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-center">
-                                                        <a class="btn btn-sm btn-info btn-icon btn-edit-doctor"
-                                                            id-doctor="{{ $doctor->id }}">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
+
                                                         <form class="ml-2">
                                                             <button
-                                                                class="btn btn-sm btn-danger btn-icon confirm-delete-doctor"
+                                                                class="btn btn-sm btn-danger btn-icon confirm-delete-doctor-schedule"
+                                                                value="{{ $doctor->id }}">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <h5>Tidak ada Data !</h5>
+                                        @endforelse --}}
+                                        @foreach ($doctorsSchedule as $doctor)
+                                            <tr>
+                                                <td>
+                                                    {{ $doctor->doctor_name }}
+                                                </td>
+                                                <td>
+                                                    @if ($doctor->day == null)
+                                                        <h6>Tidak ada Data !</h6>
+                                                    @else
+                                                        @foreach ($doctor->day as $item)
+                                                            * {{ $item }} <br>
+                                                        @endforeach
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($doctor->day == null)
+                                                        <h6>Tidak ada Data !</h6>
+                                                    @else
+                                                        @foreach ($doctor->time as $item)
+                                                            * ({{ $item }})<br>
+                                                        @endforeach
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $doctor->status }}
+                                                </td>
+                                                <td>
+                                                    {{ $doctor->note }}
+                                                </td>
+                                                <td>
+                                                    {{ $doctor->created_at }}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex justify-content-center">
+                                                        {{-- <a class="btn btn-sm btn-info btn-icon btn-edit-doctor-schedule"
+                                                    id-doctor-schedule="{{ $doctor->id }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </a> --}}
+                                                        <form class="ml-2">
+                                                            <button
+                                                                class="btn btn-sm btn-danger btn-icon confirm-delete-doctor-schedule"
                                                                 value="{{ $doctor->id }}">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
@@ -96,12 +154,10 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-
-
                                     </table>
                                 </div>
                                 <div class="float-right">
-                                    {{ $doctorsSchedule->withQueryString()->links() }}
+                                    {{ $doctorsSchedule->links() }}
                                 </div>
                             </div>
                         </div>
@@ -135,11 +191,12 @@
                     }
                 });
             });
-            $('.btn-edit-doctor').on('click', function() {
-                var doctorId = $(this).attr('id-doctor');
-                $('#modalTitle').text('Edit Doctor');
+            $('.btn-edit-doctor-schedule').on('click', function() {
+                var doctorId = $(this).attr('id-doctor-schedule');
+                $('#modalTitle').text('Edit Doctor Schedule');
                 $.ajax({
-                    url: `{{ route('editDoctor', ['id' => ':doctorId']) }}`.replace(':doctorId',
+                    url: `{{ route('editDoctorSchedule', ['id' => ':doctorId']) }}`.replace(
+                        ':doctorId',
                         doctorId),
                     type: 'GET',
                     success: function(res) {
@@ -152,7 +209,7 @@
                 });
             });
 
-            $('.confirm-delete-doctor').on('click', function() {
+            $('.confirm-delete-doctor-schedule').on('click', function() {
                 var id = $(this).val();
                 Swal.fire({
                     title: 'Yakin hapus data ?',
@@ -166,7 +223,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: '{{ route('deleteDoctor') }}',
+                            url: '{{ route('deleteDoctorSchedule') }}',
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 id: id
@@ -181,7 +238,7 @@
 
                                 setTimeout(() => {
                                     window.location.href =
-                                        '{{ route('managementDoctor') }}';
+                                        '{{ route('managementDoctorSchedule') }}';
                                 }, 1000);
                             },
                             error: function(err) {

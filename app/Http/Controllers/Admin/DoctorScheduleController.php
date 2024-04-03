@@ -17,6 +17,7 @@ class DoctorScheduleController extends Controller
                 return $query->where('doctor_id', 'like', '%' . $doctor_id . '%');
             })
             ->join('m_doctors as md', 'md.id', '=', 'd.doctor_id')
+            ->select('d.id', 'md.doctor_name', 'd.created_at', 'd.doctor_id', 'd.day', 'd.time', 'd.note', 'd.status')
             ->orderBy('d.doctor_id', 'desc')
             ->paginate(10);
 
@@ -26,11 +27,14 @@ class DoctorScheduleController extends Controller
             $formattedDate = $dateTime->format('l, d F Y');
             $carbonDate = Carbon::createFromFormat('l, d F Y', $formattedDate, 'UTC');
             $indonesianDate = $carbonDate->locale('id_ID')->isoFormat('dddd, DD MMMM YYYY');
+            $decodeDay = json_decode($u->day);
+            $decodeTime = json_decode($u->time);
             $u->created_at = $indonesianDate;
+            $u->time = $decodeTime;
+            $u->day = $decodeDay;
         }
-
         $view = [
-            'doctorsSchedule' => $doctorsSchedule
+            'doctorsSchedule' => $doctorsSchedule,
         ];
         return view('pages.doctors_schedule.index', $view);
     }
@@ -63,8 +67,31 @@ class DoctorScheduleController extends Controller
         ];
         $save = DB::table('doctor_schedules')->insert($data);
         if ($save) {
-            return response()->json(['message' => 'ok']);
+            return redirect()->route('managementDoctorSchedule')->with('success', 'Data berhasil Disimpan');
         }
-        return response()->json(['message' => 'failed'], 500);
+        return redirect()->route('managementDoctorSchedule')->with('error', 'Data gagal Disimpan');
+    }
+
+    public function editDoctorSchedule(Request $req)
+    {
+        $id = $req->id;
+        $doctorData = DB::table('m_doctors')->get();
+        $doctorSchedule = DB::table('doctor_schedules')->where('id', $id)->first();
+        $decodeDay = json_decode($doctorSchedule->day);
+        $view = [
+            'doctorData' => $doctorData,
+            'doctorSchedule' => $doctorSchedule,
+            'decodeDay' => $decodeDay,
+        ];
+        return view('pages.doctors_schedule.edit', $view);
+    }
+
+    public function deleteDoctorSchedule(Request $req)
+    {
+        $id = $req->id;
+        $delete = DB::table('doctor_schedules')->where('id', $id)->delete();
+        if ($delete) {
+            return 'Data terhapus';
+        }
     }
 }

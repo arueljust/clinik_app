@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\DoctorScheduleController;
+use App\Http\Controllers\Admin\PatientController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,8 +42,14 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/management-doctors-schedule', [DoctorScheduleController::class, 'managementDoctorSchedule'])->name('managementDoctorSchedule');
     Route::get('/add-doctor-schedule', [DoctorScheduleController::class, 'createDoctorSchedule'])->name('addDoctorSchedule');
     Route::post('/store-doctor-schedule', [DoctorScheduleController::class, 'storeDoctorSchedule'])->name('storeDoctorSchedule');
-    // Route::get('/edit-doctor/{id}', [DoctorController::class, 'editDoctor'])->name('editDoctor');
+    Route::get('/edit-doctor-schedule/{id}', [DoctorScheduleController::class, 'editDoctorSchedule'])->name('editDoctorSchedule');
     // Route::post('/update-doctor', [DoctorController::class, 'updateDoctor'])->name('updateDoctor');
-    // Route::post('/delete-doctor', [DoctorController::class, 'deleteDoctor'])->name('deleteDoctor');
-
+    Route::post('/delete-doctor-schedule', [DoctorScheduleController::class, 'deleteDoctorSchedule'])->name('deleteDoctorSchedule');
+    // patient
+    Route::get('/management-patients', [PatientController::class, 'managementPatient'])->name('managementPatient');
+    // Route::get('/add-user', [UserController::class, 'createUser'])->name('addUser');
+    // Route::post('/store-user', [UserController::class, 'storeUser'])->name('storeUser');
+    // Route::get('/edit-user/{id}', [UserController::class, 'editUser'])->name('editUser');
+    // Route::post('/update-user', [UserController::class, 'updateUser'])->name('updateUser');
+    // Route::post('/delete-user', [UserController::class, 'deleteUser'])->name('deleteUser');
 });
