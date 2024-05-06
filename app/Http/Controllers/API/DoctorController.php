@@ -35,3 +35,5 @@ class DoctorController extends Controller
         ]);
     }
 }
+
+
